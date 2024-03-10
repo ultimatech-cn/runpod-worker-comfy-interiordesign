@@ -20,6 +20,13 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Clone ComfyUI repository
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git /comfyui
+RUN git clone https://github.com/ssitu/ComfyUI_UltimateSDUpscale /comfyui/custom_nodes/ComfyUI_UltimateSDUpscale
+RUN git clone https://github.com/jags111/efficiency-nodes-comfyui /comfyui/custom_nodes/efficiency-nodes-comfyui
+RUN git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes /comfyui/custom_nodes/ComfyUI_Comfyroll_CustomNodes
+RUN git clone https://github.com/Fannovel16/comfyui_controlnet_aux /comfyui/custom_nodes/comfyui_controlnet_aux
+RUN git clone https://github.com/sipherxyz/comfyui-art-venture /comfyui/custom_nodes/comfyui-art-venture
+RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts /comfyui/custom_nodes/ComfyUI-Custom-Scripts
+
 
 # Change working directory to ComfyUI
 WORKDIR /comfyui
@@ -33,11 +40,19 @@ RUN pip3 install --no-cache-dir torch torchvision torchaudio --index-url https:/
 RUN pip3 install runpod requests
 
 # Download checkpoints/vae/LoRA to include in image
-RUN wget -O models/checkpoints/sd_xl_base_1.0.safetensors https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
-RUN wget -O models/vae/sdxl_vae.safetensors https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors
-RUN wget -O models/vae/sdxl-vae-fp16-fix.safetensors https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors
+RUN wget -O models/checkpoints/InteriorDesginV5ForCN.ckpt https://huggingface.co/datasets/Ultimatech/InteriorDesign/blob/main/InteriorDesginV5ForCN.ckpt
+RUN wget -O models/checkpoints/InteriorDesginV5ForCN.ckpt https://huggingface.co/datasets/Ultimatech/InteriorDesign/blob/main/InteriorDesginV5ForCN.ckpt
+RUN wget -O models/vae/vae-ft-mse-840000-ema-pruned.ckpt https://huggingface.co/stabilityai/sd-vae-ft-mse-original/blob/main/vae-ft-mse-840000-ema-pruned.ckpt
 RUN wget -O models/loras/xl_more_art-full_v1.safetensors https://civitai.com/api/download/models/152309
+RUN wget -O models/loras/French_Cream_Style_V1.0.safetensors https://huggingface.co/datasets/Ultimatech/InteriorDesign/blob/main/French_Cream_Style%20_V1.0.safetensors
+RUN wget -O models/loras/ModerOfficeSD1.5_v1.0.safetensors https://huggingface.co/datasets/Ultimatech/InteriorDesign/blob/main/ModerOfficeSD1.5_v1.0.safetensors
 
+# Download controlnet/IPAdapter to include in image
+RUN wget -O models/controlnet/control_v11p_sd15_mlsd.pth https://huggingface.co/lllyasviel/ControlNet-v1-1/blob/main/control_v11p_sd15_mlsd.pth
+RUN wget -O models/controlnet/control_v11f1p_sd15_depth.pth https://huggingface.co/lllyasviel/ControlNet-v1-1/blob/main/control_v11f1p_sd15_depth.pth
+RUN wget -O models/ipadapter/ip-adapter-plus_sd15.bin https://huggingface.co/h94/IP-Adapter/blob/main/models/ip-adapter-plus_sd15.bin
+RUN wget -O models/clip_vision/clip_vision_ipadapter15.safetensors https://huggingface.co/h94/IP-Adapter/blob/main/models/image_encoder/model.safetensors
+RUN wget -O models/upscale_models/RealESRGAN_x4.pth https://huggingface.co/ai-forever/Real-ESRGAN/blob/main/RealESRGAN_x4.pth
 # Example for adding specific models into image
 # ADD models/checkpoints/sd_xl_base_1.0.safetensors models/checkpoints/
 # ADD models/vae/sdxl_vae.safetensors models/vae/

@@ -4,16 +4,7 @@
 TCMALLOC="$(ldconfig -p | grep -Po "libtcmalloc.so.\d" | head -n 1)"
 export LD_PRELOAD="${TCMALLOC}"
 
-echo "runpod-worker-comfy: Downloading ComfyUI-Manager"
-nodes_dir=/comfyui/custom_nodes
 
-this_node_dir=${nodes_dir}/ComfyUI-Manager
-if [[ ! -d $this_node_dir ]]; then
-	    git clone https://github.com/ltdrdata/ComfyUI-Manager $this_node_dir
-    else
-	        (cd $this_node_dir && git pull)
-fi
-echo "runpod-worker-comfy: Downloaded ComfyUI-Manager"
 
 
 echo "runpod-worker-comfy: Starting ComfyUI"

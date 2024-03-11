@@ -65,6 +65,16 @@ RUN for dir in /comfyui/custom_nodes/*/; do \
     fi; \
 done
 
+ENV NODES_DIR=/comfyui/custom_nodes
+
+RUN mkdir -p $NODES_DIR \
+    && THIS_NODE_DIR=${NODES_DIR}/ComfyUI-Manager \
+    && if [ ! -d "$THIS_NODE_DIR" ]; then \
+        git clone https://github.com/ltdrdata/ComfyUI-Manager $THIS_NODE_DIR; \
+       else \
+         cd $THIS_NODE_DIR && git pull; \
+       fi
+
 # Go back to the root
 WORKDIR /
 

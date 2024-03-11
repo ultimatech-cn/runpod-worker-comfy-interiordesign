@@ -26,7 +26,7 @@ RUN git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes /comfyui/c
 RUN git clone https://github.com/Fannovel16/comfyui_controlnet_aux /comfyui/custom_nodes/comfyui_controlnet_aux
 RUN git clone https://github.com/sipherxyz/comfyui-art-venture /comfyui/custom_nodes/comfyui-art-venture
 RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts /comfyui/custom_nodes/ComfyUI-Custom-Scripts
-
+RUN git clone https://github.com/cubiq/ComfyUI_IPAdapter_plus /comfyui/custom_nodes/ComfyUI_IPAdapter_plus
 
 # Change working directory to ComfyUI
 WORKDIR /comfyui

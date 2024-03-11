@@ -1,28 +1,49 @@
 # Use Nvidia CUDA base image
-FROM yuwenbao/runpod-worker-comfy:base as base
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 as base
 
+# Prevents prompts from packages asking for user input during installation
+ENV DEBIAN_FRONTEND=noninteractive
+# Prefer binary wheels over source distributions for faster pip installations
+ENV PIP_PREFER_BINARY=1
+# Ensures output from python is printed immediately to the terminal without buffering
+ENV PYTHONUNBUFFERED=1 
 
-ARG TIMESTAMP=$${TIMESTAMP:-$(date +%Y%m%d%H%M%S)}
-ENV TIMESTAMP=${TIMESTAMP}
-
-# Install other necessary dependencies
+# Install Python, git and other necessary tools
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    libglx0 \
-    libegl1 \
-    libxext6 \
-    libx11-6 \
-    libglib2.0-0 && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+    python3.10 \
+    python3-pip \
+    git \
+    wget
 
+# Clean up to reduce image size
+RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts /comfyui/custom_nodes/ComfyUI-Custom-Scripts
 
 
 # Change working directory to ComfyUI
 WORKDIR /comfyui
 
+# Install ComfyUI dependencies
+RUN pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 \
+    && pip3 install --no-cache-dir xformers==0.0.21 \
+    && pip3 install -r requirements.txt
 
+# Install runpod
+RUN pip3 install runpod requests
 
-# Clone custom_nodes repository
-RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts /comfyui/custom_nodes/ComfyUI-Custom-Scripts
+ENV NODES_DIR=/comfyui/custom_nodes
+
+RUN mkdir -p $NODES_DIR \
+    && THIS_NODE_DIR=${NODES_DIR}/ComfyUI-Manager \
+    && if [ ! -d "$THIS_NODE_DIR" ]; then \
+        git clone https://github.com/ltdrdata/ComfyUI-Manager $THIS_NODE_DIR; \
+       else \
+         cd $THIS_NODE_DIR && git pull; \
+       fi
+
+# Clone ComfyUI repository
+RUN git clone https://github.com/comfyanonymous/ComfyUI.git /comfyui
 RUN git clone --recurse-submodules   https://github.com/ssitu/ComfyUI_UltimateSDUpscale /comfyui/custom_nodes/ComfyUI_UltimateSDUpscale
 RUN git clone https://github.com/jags111/efficiency-nodes-comfyui /comfyui/custom_nodes/efficiency-nodes-comfyui
 RUN git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes /comfyui/custom_nodes/ComfyUI_Comfyroll_CustomNodes
@@ -54,10 +75,6 @@ RUN for dir in /comfyui/custom_nodes/*/; do \
         pip3 install --no-cache-dir -r "$dir/requirements.txt"; \
     fi; \
 done
-
-#add missing package
-
-RUN pip3 install segment_anything
 
 
 # Go back to the root

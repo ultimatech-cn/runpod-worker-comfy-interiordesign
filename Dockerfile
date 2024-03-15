@@ -15,23 +15,25 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 
-
-# Change working directory to ComfyUI
 WORKDIR /comfyui
 
 
+# mkdir folders
+RUN mkdir -p models/ipadapter models/upscale_models
 
 # Clone custom_nodes repository
-RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts /comfyui/custom_nodes/ComfyUI-Custom-Scripts
 RUN git clone --recurse-submodules   https://github.com/ssitu/ComfyUI_UltimateSDUpscale /comfyui/custom_nodes/ComfyUI_UltimateSDUpscale
 RUN git clone https://github.com/jags111/efficiency-nodes-comfyui /comfyui/custom_nodes/efficiency-nodes-comfyui
 RUN git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes /comfyui/custom_nodes/ComfyUI_Comfyroll_CustomNodes
 RUN git clone https://github.com/Fannovel16/comfyui_controlnet_aux /comfyui/custom_nodes/comfyui_controlnet_aux
 RUN git clone https://github.com/sipherxyz/comfyui-art-venture /comfyui/custom_nodes/comfyui-art-venture
+RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts /comfyui/custom_nodes/ComfyUI-Custom-Scripts
 RUN git clone https://github.com/cubiq/ComfyUI_IPAdapter_plus /comfyui/custom_nodes/ComfyUI_IPAdapter_plus
 
-# mkdir folders
-RUN mkdir -p models/ipadapter models/upscale_models
+
+
+
+
 
 # Download checkpoints/vae/LoRA to include in image
 RUN wget -O models/checkpoints/InteriorDesginV5ForCN.ckpt https://huggingface.co/datasets/Ultimatech/InteriorDesign/resolve/main/InteriorDesginV5ForCN.ckpt
@@ -59,6 +61,8 @@ done
 #add missing package
 
 RUN pip3 install segment_anything
+RUN pip3 install scikit-image
+RUN pip3 install omegaconf
 
 
 # Go back to the root

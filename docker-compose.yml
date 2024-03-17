@@ -2,8 +2,11 @@ version: "3.8"
 
 services:
   comfyui:
+    volumes:
+      - /workspace/models:/comfyui/models
+      - /workspace/custom_nodes:/comfyui/custom_nodes
     build: ./
-    image: yuwenbao/runpod-worker-comfy:test
+    image: yuwenbao/runpod-worker-comfy:testwithoutmodels
     container_name: comfyui-worker
     environment:
       - NVIDIA_VISIBLE_DEVICES=all

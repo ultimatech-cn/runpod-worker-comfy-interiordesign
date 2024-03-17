@@ -1,0 +1,42 @@
+### 
+### 
+### This is used to link your comfyui worker and runpod network volume storage 
+### Configuring this, to match your network volume, will allow comfyui access
+### to any models/loras/embeddings/custom_nodes/etc that are contained within 
+### 
+### 
+### See https://github.com/comfyanonymous/ComfyUI/blob/master/folder_paths.py
+### OR https://github.com/comfyanonymous/ComfyUI/blob/master/extra_model_paths.yaml.example
+### for latest usable extra model path names
+### 
+###  
+### NOTE: MAKE SURE THE PATH EXISTS IN YOUR VOLUME BEFORE YOU TRY TO MOUNT IT!
+### 
+### NOTE: For custom_nodes, make sure that any required modules are preinstalled
+### in the image or your custom nodes will fail to mount properly!!
+### See your desired custom node repo's requirements.txt file for details. 
+### If there is no requirements.txt file, there are no additional modules 
+### required for the nodes that specific repo's custom nodes. 
+### 
+### 
+comfyui:
+  base_path: /workspace/
+
+  custom_nodes: custom_nodes/
+  upscale_models: models/upscale_models/
+  checkpoints: models/checkpoints/
+  embeddings: models/embeddings/
+  controlnet: models/controlnet/
+  configs: models/configs/
+  loras: models/loras/
+  vae: models/vae/
+  unet: models/unet/
+  clip: models/clip/
+  clip_vision: models/clip_vision/
+  style_models: models/style_models/
+  hypernetworks: models/gligen
+  classifiers: models/gligen/
+  vae_approx: models/vae_approx/
+  diffusers: models/diffusers/
+  gligen: models/gligen/
+
